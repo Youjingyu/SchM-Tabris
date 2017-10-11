@@ -8,5 +8,4 @@
     youjingyu
   </author>
   <preference name="EnableDeveloperConsole" value="$IS_DEBUG" />
-  <plugin name="cordova-plugin-file" spec="^4.3.3" />
 </widget>
