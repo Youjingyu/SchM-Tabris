@@ -1,4 +1,4 @@
-const {Composite, TextView, CollectionView} = require('tabris');
+const {Composite, TextView, CollectionView, ImageView} = require('tabris');
 const storage = require('../utils/local-storage');
 const {themeColor} = require('../config');
 
@@ -45,9 +45,24 @@ const collectionViewConfig = {
     }
 };
 
-module.exports = class Note extends CollectionView{
+module.exports = class Note extends Composite{
     constructor(properties){
-        super(Object.assign(collectionViewConfig, properties));
+        super(Object.assign({top: 0, bottom: 0, left: 0, right: 0}, properties));
+        this.append(new CollectionView(collectionViewConfig));
+        const addContainer = new Composite({
+            centerX: 0,
+            bottom: 5
+        });
+        const icon = new ImageView({
+            image: {
+                src: 'src/img/add.png',
+                width: 50,
+                height: 50
+            }
+        });
+        icon.on('tap', ()=>{});
+        addContainer.append(icon);
+        this.append(addContainer);
     }
 };
 
