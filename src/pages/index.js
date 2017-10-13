@@ -1,6 +1,7 @@
 /*eslint-env browser*/
 const {Page, Tab, TabFolder, TextView} = require('tabris');
-const Note = require('../modulse/note');
+const Note = require('../modules/note');
+const {themeColor} = require('../config');
 
 module.exports = class Index extends Page {
     constructor(properties) {
@@ -11,7 +12,9 @@ module.exports = class Index extends Page {
         let tabFolder = new TabFolder({
             left: 0, top: 0, right: 0, bottom: 0,
             paging: true,
-            tabBarLocation: 'bottom'
+            tabBarLocation: 'bottom',
+            textColor: themeColor.mainColor,
+            background: themeColor.backgroundColor
         });
         this.append(tabFolder);
 
@@ -24,8 +27,8 @@ module.exports = class Index extends Page {
     _createTab(tabFolder, title, image, seletedImage) {
         let tab = new Tab({
             title: title, // converted to upper-case on Android
-            image: {src: image, scale: 2},
-            selectedImage: {src: seletedImage, scale: 2}
+            image: {src: image},
+            selectedImage: {src: seletedImage}
         }).appendTo(tabFolder);
         new TextView({
             centerX: 0, centerY: 0,
@@ -35,7 +38,8 @@ module.exports = class Index extends Page {
     _createNote(tabFolder) {
         let tab = new Tab({
             title: 'Note', // converted to upper-case on Android
-            image: {src: 'src/img/girl.png', scale: 2}
+            image: {src: 'src/img/girl.png'},
+            selectedImage: {src: 'src/img/girl.png'}
         }).appendTo(tabFolder);
         tab.append(new Note());
     }
