@@ -1,3 +1,4 @@
 module.exports = {
-    appNavigationId: 'app-navigation-id'
+    appNavigationId: 'app-navigation-id',
+    appNoteId: 'app-note-id'
 };

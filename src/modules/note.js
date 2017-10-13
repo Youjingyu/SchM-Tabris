@@ -2,10 +2,11 @@ const {ui, Composite, TextView, CollectionView, ImageView} = require('tabris');
 const EditNote = require('../pages/edit-note');
 const storage = require('../utils/local-storage');
 const {themeColor} = require('../config');
-const {appNavigationId} = require('../utils/gobal-variable');
+const {appNavigationId, appNoteId} = require('../utils/gobal-variable');
 
-const note = storage.getNote();
+let note = storage.getNote();
 const collectionViewConfig = {
+    id: appNoteId,
     left: 10,
     top: 0,
     right: 10,
@@ -50,7 +51,12 @@ const collectionViewConfig = {
 module.exports = class Note extends Composite{
     constructor(properties){
         super(Object.assign({top: 0, bottom: 0, left: 0, right: 0}, properties));
-        this.append(new CollectionView(collectionViewConfig));
+        const collectionView = new CollectionView(collectionViewConfig);
+        collectionView.on('refresh', ()=>{
+            note = storage.getNote();
+            this.refreshIndicator = false;
+        });
+        this.append(collectionView);
         const addContainer = new Composite({
             centerX: 0,
             bottom: 5
@@ -63,7 +69,7 @@ module.exports = class Note extends Composite{
             }
         });
         icon.on('tap', ()=>{
-            ui.contentView.find('#' + appNavigationId)[0].append(new EditNote({type: 'add'}));
+            ui.contentView.find('#' + appNavigationId)[0].append(new EditNote());
         });
         addContainer.append(icon);
         this.append(addContainer);

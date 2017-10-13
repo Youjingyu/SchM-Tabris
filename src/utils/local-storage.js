@@ -2,9 +2,10 @@
 
 module.exports = {
     saveNote: (note)=>{
-        localStorage.setItem('note', note);
+        localStorage.setItem('note', JSON.stringify(note));
     },
     getNote: ()=>{
-        localStorage.getItem('note');
+        const note = localStorage.getItem('note');
+        return  note ? JSON.parse(note) : [];
     }
 };
