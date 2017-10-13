@@ -48,14 +48,32 @@ const collectionViewConfig = {
     }
 };
 
+class NoteList extends CollectionView{
+    constructor(){
+        super(collectionViewConfig);
+    }
+    refreshNoteList(noteList, type, index){
+        note = noteList;
+        if(type === 'edit'){
+            this.refreshItem(noteList);
+        } else if(type === 'delete'){
+            this.remove(index);
+        } else if(type === 'add'){
+            this.insert(0);
+            this.refreshItem(noteList);
+        }
+    }
+    refreshItem(noteList) {
+        noteList.forEach((note, index)=>{
+            this.refresh(index);
+        });
+    }
+}
+
 module.exports = class Note extends Composite{
     constructor(properties){
         super(Object.assign({top: 0, bottom: 0, left: 0, right: 0}, properties));
-        const collectionView = new CollectionView(collectionViewConfig);
-        collectionView.on('refresh', ()=>{
-            note = storage.getNote();
-            this.refreshIndicator = false;
-        });
+        const collectionView = new NoteList();
         this.append(collectionView);
         const addContainer = new Composite({
             centerX: 0,

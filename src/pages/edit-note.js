@@ -10,7 +10,7 @@ module.exports = class EditNote extends Page {
         super({title: 'Add note', background: themeColor.backgroundColor});
         const noteIndex = properties && properties.noteIndex;
         this._createEditUI(noteIndex);
-        this.on('disappear', this._saveNote.bind(this, noteIndex));
+        this.on('dispose', this._saveNote.bind(this, noteIndex));
     }
     _createEditUI(noteIndex) {
         this.input = new TextInput({
@@ -31,33 +31,26 @@ module.exports = class EditNote extends Page {
         const month = date.getMonth() + 1;
         const result = {
             content: text,
-            date: date.getYear() + '-' + (month > 9 ? month : '0' + month) +  '-' + date.getDay()
+            date: date.getFullYear() + '-' + (month > 9 ? month : '0' + month) +  '-' + date.getDate()
         };
+        const noteWidgets = ui.contentView.find('#' + appNoteId)[0];
         if(noteIndex){
             if(text !== note[noteIndex].content){
                 if(text !== ''){
                     note[noteIndex] = result;
-                    noteWidgets.refresh(noteIndex);
+                    noteWidgets.refreshNoteList(note, 'edit');
                 } else {
                     note.splice(noteIndex, 1);
-                    noteIndex.remove(noteIndex);
+                    noteWidgets.refreshNoteList(note, 'delete');
                 }
                 storage.saveNote(note);
             }
         } else {
             if(text !== ''){
                 note.unshift(result);
-                noteIndex.remove(noteIndex);
+                noteWidgets.refreshNoteList(note, 'add', noteIndex);
                 storage.saveNote(note);
             }
-        }
-    }
-    _refreshNoteList(type, noteList) {
-        const noteWidgets = ui.contentView.find('#' + appNoteId)[0];
-        if(type === 'edit'){
-            noteList.forEach((note, i)=>{
-
-            })
         }
     }
 };
