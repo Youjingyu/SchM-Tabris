@@ -2,11 +2,13 @@ const {Action, NavigationView, ui} = require('tabris');
 const Index = require('./pages/index');
 const UserInfo = require('./pages/user-info');
 const {themeColor} = require('./config');
+const {appNavigationId} = require('./utils/gobal-variable');
 
 ui.statusBar.background = themeColor.mainColor;
 const indexPage = new Index();
 
 let navigationView = new NavigationView({
+    id: appNavigationId,
     left: 0,
     top: 0,
     right: 0,
