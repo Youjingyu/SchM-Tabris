@@ -1,3 +1,5 @@
+/*eslint-env browser*/
+
 const {ui, Composite, TextView, CollectionView, ImageView} = require('tabris');
 const EditNote = require('../pages/edit-note');
 const storage = require('../utils/local-storage');
@@ -5,52 +7,62 @@ const {themeColor} = require('../config');
 const {appNavigationId, appNoteId} = require('../utils/gobal-variable');
 
 let note = storage.getNote();
-const collectionViewConfig = {
-    id: appNoteId,
-    left: 10,
-    top: 0,
-    right: 10,
-    bottom: 0,
-    background: themeColor.backgroundColor,
-    itemCount: note.length,
-    createCell: () => {
-        const textView = new TextView({
-            left: 10,
-            right: 10,
-            top: 10,
-            maxLines: 2,
-            font: '20px'
-        });
-        const textViewDate = new TextView({
-            left: 10,
-            right: 10,
-            top: 'prev() 5',
-            maxLines: 1,
-            font: '12px'
-        });
-        const hr = new Composite({
-            left: 0,
-            right: 0,
-            top: 'prev() 10',
-            height: 10,
-            background: themeColor.backgroundColor
-        });
-        return new Composite({
-            left: 0,
-            right: 0,
-            background: '#fff'
-        }).append(textView).append(textViewDate).append(hr);
-    },
-    updateCell: (cell, index) => {
-        const textView = cell.find('TextView');
-        textView[0].text = note[index].content;
-        textView[1].text = note[index].date;
-    }
-};
-
 class NoteList extends CollectionView{
     constructor(){
-        super(collectionViewConfig);
+        let allowDeleteFlag = true;
+        super({
+            id: appNoteId,
+            left: 10,
+            top: 0,
+            right: 10,
+            bottom: 0,
+            background: themeColor.backgroundColor,
+            itemCount: note.length,
+            createCell: () => {
+                const textView = new TextView({
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    maxLines: 2,
+                    font: '20px'
+                });
+                const textViewDate = new TextView({
+                    left: 10,
+                    right: 10,
+                    top: 'prev() 5',
+                    maxLines: 1,
+                    font: '12px'
+                });
+                const hr = new Composite({
+                    left: 0,
+                    right: 0,
+                    top: 'prev() 10',
+                    height: 10,
+                    background: themeColor.backgroundColor
+                });
+                return new Composite({
+                    left: 0,
+                    right: 0,
+                    background: '#fff'
+                }).append(textView).append(textViewDate).append(hr);
+            },
+            updateCell: (cell, index) => {
+                const textView = cell.find('TextView');
+                textView[0].text = note[index].content;
+                textView[1].text = note[index].date;
+                cell.on('swipeLeft', ()=>{
+                    if(allowDeleteFlag){
+                        note.splice(index, 1);
+                        this.remove(index);
+                        storage.saveNote(note);
+                        allowDeleteFlag = false;
+                        setTimeout(()=>{
+                            allowDeleteFlag = true;
+                        }, 500);
+                    }
+                });
+            }
+        });
     }
     refreshNoteList(noteList, type, index){
         note = noteList;
