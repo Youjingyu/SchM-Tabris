@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="example.schm.tabris" version="0.1.0">
-  <name>Schm Tabris</name>
+<widget id="Tiya" version="0.1.0">
+  <name>Tiya</name>
   <description>
-    Example Tabris.js App
+    Tiya's Tabris.js App
   </description>
   <author email="735284268@qq.com">
     youjingyu
